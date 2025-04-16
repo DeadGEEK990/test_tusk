@@ -4,6 +4,7 @@ from .db import Base
 
 
 class AddressInfo(Base):
+    """Таблица БД для обращений"""
     __tablename__ = "address_info"
 
     id = Column(Integer, primary_key = True, index = True)

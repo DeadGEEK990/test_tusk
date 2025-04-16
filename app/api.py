@@ -23,6 +23,7 @@ db_service = DatabaseService()
 
 @app.post("/address-info/", response_model=AddressInfoResponseSchemas)
 async def get_address_info(request: AddressRequestsSchemas):
+    """Полечение информации по адресу и занесение обращения в бд"""
     try:
         info = tron_service.get_address_info(request.address)
         db_service.log_query(request.address, info)
@@ -32,6 +33,7 @@ async def get_address_info(request: AddressRequestsSchemas):
 
 @app.get("/query-history/", response_model=AddressInfoListResponseSchemas)
 async def get_query_history(page: int = 1, per_page: int = 10):
+    """Полечние последних обращений"""
     try:
         history = db_service.get_query_history(page, per_page)
         return history

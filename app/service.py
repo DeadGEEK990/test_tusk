@@ -6,6 +6,11 @@ from .config import settings
 
 
 class TronService:
+    """
+    Сервис для работы с блокчейном Tron.
+    Обрабатывает запросы баланса, bandwidth и energy.
+    """
+
     def __init__(self):
         self.client = Tron(network=settings.TRON_NETWORK)
 
@@ -29,10 +34,16 @@ class TronService:
 
 
 class DatabaseService:
+    """
+    Сервис для работы с базой данных.
+    Занесение запросов в бд и получение последних записей
+    """
+
     def __init__(self):
         self.db = SessionLocal()
 
     def log_query(self, address: str, info: dict) -> AddressInfo:
+        """Заносит в бд информацию о запросе"""
         db_query = AddressInfo(
             address=address,
             bandwidth=info.get("bandwidth"),
@@ -45,6 +56,7 @@ class DatabaseService:
         return db_query
 
     def get_query_history(self, page: int = 1, per_page: int = 10) -> dict:
+        """Полечние последних записей"""
         offset = (page - 1) * per_page
         queries = self.db.query(AddressInfo) \
             .order_by(AddressInfo.created_at.desc()) \
