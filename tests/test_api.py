@@ -9,14 +9,15 @@ client = TestClient(app)
 
 @pytest.fixture(scope="module", autouse=True)
 def setup_db():
-    # Create all tables
+    # Создание таблиц БД
     Base.metadata.create_all(bind=engine)
     yield
-    # Drop all tables
+    # Удаление всех таблиц
     Base.metadata.drop_all(bind=engine)
 
 
 def test_get_address_info():
+    """Тест запроса /address-info/"""
     test_address = "TNPeeaaFB7K9cmo4uQpcU32zGK8G1NYqeL"  # Testnet address
     response = client.post(
         "/address-info/",
@@ -32,10 +33,11 @@ def test_get_address_info():
 
 
 def test_get_query_history():
-    # First make sure we have at least one record
+    """Тест запроса /query-history/"""
+    # Создаем тестовую запись в БД
     test_address = "TNPeeaaFB7K9cmo4uQpcU32zGK8G1NYqeL"
     client.post("/address-info/", json={"address": test_address})
-
+    # Получаем записи из БД
     response = client.get("/query-history/", params={"page": 1, "per_page": 5})
     assert response.status_code == 200
     data = response.json()
